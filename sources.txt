@@ -1,0 +1,4 @@
+src/main/java/com/amadeu/autofish/AutoFishController.java
+src/main/java/com/amadeu/autofish/AutoFishClient.java
+src/main/java/com/amadeu/autofish/FishingStateTracker.java
+src/main/java/com/amadeu/autofish/InputHelper.java

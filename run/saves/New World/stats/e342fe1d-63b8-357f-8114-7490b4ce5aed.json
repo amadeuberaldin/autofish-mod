@@ -1,0 +1,21 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:sleep_in_bed": 1,
+      "minecraft:time_since_rest": 46,
+      "minecraft:walk_one_cm": 932,
+      "minecraft:total_world_time": 1039,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 1018,
+      "minecraft:fish_caught": 2,
+      "minecraft:time_since_death": 1018
+    },
+    "minecraft:used": {
+      "minecraft:fishing_rod": 3
+    },
+    "minecraft:picked_up": {
+      "minecraft:cod": 2
+    }
+  },
+  "DataVersion": 4671
+}

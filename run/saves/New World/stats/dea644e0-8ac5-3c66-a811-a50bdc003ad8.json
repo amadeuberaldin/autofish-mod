@@ -1,0 +1,20 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:fishing_rod": 3
+    },
+    "minecraft:picked_up": {
+      "minecraft:salmon": 1,
+      "minecraft:tripwire_hook": 1
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 1104,
+      "minecraft:total_world_time": 1182,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 1104,
+      "minecraft:fish_caught": 1,
+      "minecraft:time_since_death": 1104
+    }
+  },
+  "DataVersion": 4671
+}

@@ -1,0 +1,31 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:interact_with_crafting_table": 2,
+      "minecraft:open_chest": 2,
+      "minecraft:sleep_in_bed": 1,
+      "minecraft:time_since_rest": 10289,
+      "minecraft:walk_one_cm": 1207,
+      "minecraft:total_world_time": 15864,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 15833,
+      "minecraft:fish_caught": 25,
+      "minecraft:time_since_death": 15833
+    },
+    "minecraft:crafted": {
+      "minecraft:stick": 4,
+      "minecraft:fishing_rod": 1
+    },
+    "minecraft:used": {
+      "minecraft:fishing_rod": 30
+    },
+    "minecraft:picked_up": {
+      "minecraft:salmon": 4,
+      "minecraft:cod": 20,
+      "minecraft:pufferfish": 1,
+      "minecraft:lily_pad": 2,
+      "minecraft:rotten_flesh": 2
+    }
+  },
+  "DataVersion": 4671
+}

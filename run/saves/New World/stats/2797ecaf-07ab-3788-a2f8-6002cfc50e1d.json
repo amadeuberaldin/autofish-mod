@@ -1,0 +1,20 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:fishing_rod": 4
+    },
+    "minecraft:picked_up": {
+      "minecraft:cod": 2,
+      "minecraft:lily_pad": 1
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 1738,
+      "minecraft:total_world_time": 2124,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 1738,
+      "minecraft:fish_caught": 2,
+      "minecraft:time_since_death": 1738
+    }
+  },
+  "DataVersion": 4671
+}

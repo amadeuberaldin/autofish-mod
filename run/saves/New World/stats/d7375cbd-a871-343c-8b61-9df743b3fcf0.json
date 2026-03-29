@@ -1,0 +1,21 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 946,
+      "minecraft:walk_one_cm": 588,
+      "minecraft:total_world_time": 963,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 946,
+      "minecraft:fish_caught": 3,
+      "minecraft:time_since_death": 946
+    },
+    "minecraft:picked_up": {
+      "minecraft:cod": 2,
+      "minecraft:pufferfish": 1
+    },
+    "minecraft:used": {
+      "minecraft:fishing_rod": 4
+    }
+  },
+  "DataVersion": 4671
+}
