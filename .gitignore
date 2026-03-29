@@ -2,12 +2,21 @@
 .gradle/
 build/
 
+# Runtime / dev environment
+run/
+bin/
+
 # Logs
 *.log
+logs/
 
 # IDE
 .idea/
 .vscode/
+*.code-workspace
 
 # OS
 .DS_Store
+
+# Temporary / misc
+sources.txt
