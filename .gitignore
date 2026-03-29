@@ -1,6 +1,7 @@
 # Gradle
 .gradle/
 build/
+src/main/resources/.gradle/
 
 # Runtime / dev environment
 run/
