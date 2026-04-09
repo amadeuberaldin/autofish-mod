@@ -18,7 +18,7 @@ public class WaterCheckHelper {
             return false;
         }
 
-        HitResult hitResult = client.player.raycast(8.0, 0.0F, false);
+        HitResult hitResult = client.player.raycast(8.0, 0.0F, true);
 
         if (hitResult.getType() != HitResult.Type.BLOCK) {
             return false;
