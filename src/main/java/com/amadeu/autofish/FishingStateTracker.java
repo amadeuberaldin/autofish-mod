@@ -1,13 +1,13 @@
 package com.amadeu.autofish;
 
-import com.amadeu.autofish.mixin.FishingBobberEntityAccessor;
-import net.minecraft.entity.projectile.FishingBobberEntity;
+import com.amadeu.autofish.mixin.FishingHookAccessor;
+import net.minecraft.world.entity.projectile.FishingHook;
 
 public class FishingStateTracker {
     private static boolean lastCaughtFish = false;
     private static int ignoreTicks = 0;
 
-    public static boolean shouldReel(FishingBobberEntity bobber) {
+    public static boolean shouldReel(FishingHook bobber) {
         if (bobber == null) {
             reset();
             return false;
@@ -21,7 +21,7 @@ public class FishingStateTracker {
             return false;
         }
 
-        boolean caughtFish = ((FishingBobberEntityAccessor) bobber).autofish$isCaughtFish();
+        boolean caughtFish = ((FishingHookAccessor) bobber).autofish$isBiting();
 
         if (caughtFish && !lastCaughtFish) {
             lastCaughtFish = true;

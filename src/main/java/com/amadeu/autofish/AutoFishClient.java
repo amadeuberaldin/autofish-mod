@@ -1,77 +1,79 @@
 package com.amadeu.autofish;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class AutoFishClient implements ClientModInitializer {
-    private static final KeyBinding.Category AUTO_FISH_CATEGORY = KeyBinding.Category
-            .create(Identifier.of("autofish", "main"));
+    private static final KeyMapping.Category AUTO_FISH_CATEGORY = KeyMapping.Category.register(
+            Identifier.fromNamespaceAndPath("autofish", "main"));
 
-    private static KeyBinding toggleKey;
-    private static KeyBinding toggleHudKey;
-    private static KeyBinding toggleMessagesKey;
-    private static KeyBinding openMenuKey;
+    private static KeyMapping toggleKey;
+    private static KeyMapping toggleHudKey;
+    private static KeyMapping toggleMessagesKey;
+    private static KeyMapping openMenuKey;
 
     @Override
     public void onInitializeClient() {
         AutoFishConfig.load();
 
-        openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        openMenuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.autofish.open_menu",
                 GLFW.GLFW_KEY_O,
                 AUTO_FISH_CATEGORY));
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.autofish.toggle",
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
                 AUTO_FISH_CATEGORY));
 
-        toggleHudKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        toggleHudKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.autofish.toggle_hud",
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
                 AUTO_FISH_CATEGORY));
 
-        toggleMessagesKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        toggleMessagesKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.autofish.toggle_messages",
+                InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_M,
                 AUTO_FISH_CATEGORY));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (toggleKey.wasPressed()) {
+            while (toggleKey.consumeClick()) {
                 AutoFishController.toggle(client);
             }
 
-            while (openMenuKey.wasPressed()) {
+            while (openMenuKey.consumeClick()) {
                 if (client.player != null) {
-                    client.setScreen(new AutoFishConfigScreen(client.currentScreen));
+                    client.setScreen(new AutoFishConfigScreen(client.screen));
                 }
             }
 
-            while (toggleHudKey.wasPressed()) {
+            while (toggleHudKey.consumeClick()) {
                 AutoFishConfig.get().showHud = !AutoFishConfig.get().showHud;
                 AutoFishConfig.save();
 
                 if (client.player != null) {
-                    client.player.sendMessage(
-                            Text.literal("AutoFish HUD: " + (AutoFishConfig.get().showHud ? "ON" : "OFF")),
-                            true);
+                    client.player.sendSystemMessage(
+                            Component.literal("AutoFish HUD: " + (AutoFishConfig.get().showHud ? "ON" : "OFF")));
                 }
             }
 
-            while (toggleMessagesKey.wasPressed()) {
+            while (toggleMessagesKey.consumeClick()) {
                 AutoFishConfig.get().showActionbarMessages = !AutoFishConfig.get().showActionbarMessages;
                 AutoFishConfig.save();
 
                 if (client.player != null) {
-                    client.player.sendMessage(
-                            Text.literal("AutoFish mensagens: "
-                                    + (AutoFishConfig.get().showActionbarMessages ? "ON" : "OFF")),
-                            true);
+                    client.player.sendSystemMessage(
+                            Component.literal("AutoFish mensagens: "
+                                    + (AutoFishConfig.get().showActionbarMessages ? "ON" : "OFF")));
                 }
             }
 

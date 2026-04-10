@@ -1,9 +1,9 @@
 {
   "required": true,
   "package": "com.amadeu.autofish.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "client": [
-    "FishingBobberEntityAccessor"
+    "FishingHookAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

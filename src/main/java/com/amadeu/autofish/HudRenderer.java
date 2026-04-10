@@ -2,30 +2,29 @@ package com.amadeu.autofish;
 
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class HudRenderer {
 
     public static void register() {
         HudElementRegistry.attachElementAfter(
                 VanillaHudElements.CROSSHAIR,
-                Identifier.of("autofish", "hud"),
-                HudRenderer::render
+                Identifier.fromNamespaceAndPath("autofish", "hud"),
+                HudRenderer::extractRenderState
         );
     }
 
-    private static void render(DrawContext context, Object tickCounter) {
-        MinecraftClient client = MinecraftClient.getInstance();
+    private static void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor context, net.minecraft.client.DeltaTracker tickCounter) {
+        Minecraft client = Minecraft.getInstance();
 
         if (client == null || client.player == null) return;
         if (!AutoFishController.isEnabled()) return;
         if (!AutoFishConfig.get().showHud) return;
 
-        int screenWidth = client.getWindow().getScaledWidth();
-        int screenHeight = client.getWindow().getScaledHeight();
+        int screenWidth = context.guiWidth();
+        int screenHeight = context.guiHeight();
 
         int padding = 10;
         int lineHeight = 12;
@@ -37,10 +36,10 @@ public class HudRenderer {
         String line5 = "Tempo: " + StatsTracker.getElapsedSeconds() + "s";
 
         int maxWidth = Math.max(
-                Math.max(client.textRenderer.getWidth(line1), client.textRenderer.getWidth(line2)),
+                Math.max(client.font.width(line1), client.font.width(line2)),
                 Math.max(
-                        Math.max(client.textRenderer.getWidth(line3), client.textRenderer.getWidth(line4)),
-                        client.textRenderer.getWidth(line5)
+                        Math.max(client.font.width(line3), client.font.width(line4)),
+                        client.font.width(line5)
                 )
         );
 
@@ -55,18 +54,18 @@ public class HudRenderer {
         int textX = x + 5;
         int textY = y + 4;
 
-        context.drawText(client.textRenderer, Text.literal(line1), textX, textY, 0xFF00FF00, true);
+        context.text(client.font, Component.literal(line1), textX, textY, 0xFF00FF00, true);
         textY += lineHeight;
 
-        context.drawText(client.textRenderer, Text.literal(line2), textX, textY, 0xFFFFFFFF, true);
+        context.text(client.font, Component.literal(line2), textX, textY, 0xFFFFFFFF, true);
         textY += lineHeight;
 
-        context.drawText(client.textRenderer, Text.literal(line3), textX, textY, 0xFFFFFF55, true);
+        context.text(client.font, Component.literal(line3), textX, textY, 0xFFFFFF55, true);
         textY += lineHeight;
 
-        context.drawText(client.textRenderer, Text.literal(line4), textX, textY, 0xFFFFAA55, true);
+        context.text(client.font, Component.literal(line4), textX, textY, 0xFFFFAA55, true);
         textY += lineHeight;
 
-        context.drawText(client.textRenderer, Text.literal(line5), textX, textY, 0xFFFFFFFF, true);
+        context.text(client.font, Component.literal(line5), textX, textY, 0xFFFFFFFF, true);
     }
 }

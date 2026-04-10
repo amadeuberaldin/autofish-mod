@@ -1,11 +1,11 @@
 package com.amadeu.autofish;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.item.FishingRodItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 
 import java.util.Random;
 
@@ -18,13 +18,12 @@ public class AutoFishController {
 
     private static final Random random = new Random();
 
-    public static void toggle(MinecraftClient client) {
+    public static void toggle(Minecraft client) {
         enabled = !enabled;
 
         if (client.player != null && AutoFishConfig.get().showActionbarMessages) {
-            client.player.sendMessage(
-                    Text.literal(enabled ? "AutoFish: ON" : "AutoFish: OFF"),
-                    true
+            client.player.sendSystemMessage(
+                    Component.literal(enabled ? "AutoFish: ON" : "AutoFish: OFF")
             );
         }
 
@@ -48,10 +47,10 @@ public class AutoFishController {
         return enabled;
     }
 
-    public static void tick(MinecraftClient client) {
+    public static void tick(Minecraft client) {
         if (!enabled) return;
 
-        if (client == null || client.player == null || client.world == null || client.interactionManager == null) {
+        if (client == null || client.player == null || client.level == null || client.gameMode == null) {
             return;
         }
 
@@ -61,10 +60,10 @@ public class AutoFishController {
         if (recastDelayTicks > 0) recastDelayTicks--;
         if (noWaterMessageCooldownTicks > 0) noWaterMessageCooldownTicks--;
 
-        Hand rodHand = getFishingRodHand(client);
+        InteractionHand rodHand = getFishingRodHand(client);
         if (rodHand == null) return;
 
-        FishingBobberEntity bobber = client.player.fishHook;
+        FishingHook bobber = client.player.fishing;
 
         if (bobber != null) {
             if (FishingStateTracker.shouldReel(bobber)) {
@@ -89,7 +88,7 @@ public class AutoFishController {
                 if (AutoFishConfig.get().showActionbarMessages &&
                         noWaterMessageCooldownTicks <= 0 &&
                         client.player != null) {
-                    client.player.sendMessage(Text.literal("AutoFish: sem água válida à frente"), true);
+                    client.player.sendSystemMessage(Component.literal("AutoFish: sem água válida à frente"));
                     noWaterMessageCooldownTicks = 40;
                 }
                 return;
@@ -108,12 +107,12 @@ public class AutoFishController {
         return random.nextInt(max - min + 1) + min;
     }
 
-    private static Hand getFishingRodHand(MinecraftClient client) {
-        ItemStack mainHand = client.player.getMainHandStack();
-        if (mainHand.getItem() instanceof FishingRodItem) return Hand.MAIN_HAND;
+    private static InteractionHand getFishingRodHand(Minecraft client) {
+        ItemStack mainHand = client.player.getMainHandItem();
+        if (mainHand.getItem() instanceof FishingRodItem) return InteractionHand.MAIN_HAND;
 
-        ItemStack offHand = client.player.getOffHandStack();
-        if (offHand.getItem() instanceof FishingRodItem) return Hand.OFF_HAND;
+        ItemStack offHand = client.player.getOffhandItem();
+        if (offHand.getItem() instanceof FishingRodItem) return InteractionHand.OFF_HAND;
 
         return null;
     }

@@ -1,20 +1,20 @@
 package com.amadeu.autofish;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 
 public class AutoFishConfigScreen extends Screen {
 
     private final Screen parent;
 
-    private ButtonWidget hudButton;
-    private ButtonWidget messagesButton;
-    private ButtonWidget minDelayButton;
-    private ButtonWidget maxDelayButton;
+    private Button hudButton;
+    private Button messagesButton;
+    private Button minDelayButton;
+    private Button maxDelayButton;
 
     protected AutoFishConfigScreen(Screen parent) {
-        super(Text.literal("AutoFish Config"));
+        super(Component.literal("AutoFish Config"));
         this.parent = parent;
     }
 
@@ -23,29 +23,29 @@ public class AutoFishConfigScreen extends Screen {
         int centerX = this.width / 2;
         int y = this.height / 4;
 
-        hudButton = this.addDrawableChild(ButtonWidget.builder(
+        hudButton = this.addRenderableWidget(Button.builder(
                 getHudText(),
                 button -> {
                     AutoFishConfig.get().showHud = !AutoFishConfig.get().showHud;
                     refreshTexts();
                 }
-        ).dimensions(centerX - 100, y, 200, 20).build());
+        ).bounds(centerX - 100, y, 200, 20).build());
 
         y += 24;
 
-        messagesButton = this.addDrawableChild(ButtonWidget.builder(
+        messagesButton = this.addRenderableWidget(Button.builder(
                 getMessagesText(),
                 button -> {
                     AutoFishConfig.get().showActionbarMessages = !AutoFishConfig.get().showActionbarMessages;
                     refreshTexts();
                 }
-        ).dimensions(centerX - 100, y, 200, 20).build());
+        ).bounds(centerX - 100, y, 200, 20).build());
 
         y += 30;
 
         // Delay mínimo
-        this.addDrawableChild(ButtonWidget.builder(
-                Text.literal("-"),
+        this.addRenderableWidget(Button.builder(
+                Component.literal("-"),
                 button -> {
                     if (AutoFishConfig.get().recastDelayMin > 0) {
                         AutoFishConfig.get().recastDelayMin--;
@@ -57,16 +57,15 @@ public class AutoFishConfigScreen extends Screen {
 
                     refreshTexts();
                 }
-        ).dimensions(centerX - 100, y, 20, 20).build());
+        ).bounds(centerX - 100, y, 20, 20).build());
 
-        minDelayButton = this.addDrawableChild(ButtonWidget.builder(
+        minDelayButton = this.addRenderableWidget(Button.builder(
                 getMinDelayText(),
-                button -> {
-                }
-        ).dimensions(centerX - 75, y, 150, 20).build());
+                button -> {}
+        ).bounds(centerX - 75, y, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(
-                Text.literal("+"),
+        this.addRenderableWidget(Button.builder(
+                Component.literal("+"),
                 button -> {
                     AutoFishConfig.get().recastDelayMin++;
 
@@ -76,13 +75,13 @@ public class AutoFishConfigScreen extends Screen {
 
                     refreshTexts();
                 }
-        ).dimensions(centerX + 80, y, 20, 20).build());
+        ).bounds(centerX + 80, y, 20, 20).build());
 
         y += 24;
 
         // Delay máximo
-        this.addDrawableChild(ButtonWidget.builder(
-                Text.literal("-"),
+        this.addRenderableWidget(Button.builder(
+                Component.literal("-"),
                 button -> {
                     if (AutoFishConfig.get().recastDelayMax > AutoFishConfig.get().recastDelayMin) {
                         AutoFishConfig.get().recastDelayMax--;
@@ -90,26 +89,25 @@ public class AutoFishConfigScreen extends Screen {
 
                     refreshTexts();
                 }
-        ).dimensions(centerX - 100, y, 20, 20).build());
+        ).bounds(centerX - 100, y, 20, 20).build());
 
-        maxDelayButton = this.addDrawableChild(ButtonWidget.builder(
+        maxDelayButton = this.addRenderableWidget(Button.builder(
                 getMaxDelayText(),
-                button -> {
-                }
-        ).dimensions(centerX - 75, y, 150, 20).build());
+                button -> {}
+        ).bounds(centerX - 75, y, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(
-                Text.literal("+"),
+        this.addRenderableWidget(Button.builder(
+                Component.literal("+"),
                 button -> {
                     AutoFishConfig.get().recastDelayMax++;
                     refreshTexts();
                 }
-        ).dimensions(centerX + 80, y, 20, 20).build());
+        ).bounds(centerX + 80, y, 20, 20).build());
 
         y += 40;
 
-        this.addDrawableChild(ButtonWidget.builder(
-                Text.literal("Salvar e voltar"),
+        this.addRenderableWidget(Button.builder(
+                Component.literal("Salvar e voltar"),
                 button -> {
                     AutoFishConfig.get().recastDelayMin = Math.max(0, AutoFishConfig.get().recastDelayMin);
 
@@ -119,10 +117,11 @@ public class AutoFishConfigScreen extends Screen {
 
                     AutoFishConfig.save();
 
-                    assert client != null;
-                    client.setScreen(parent);
+                    if (this.minecraft != null) {
+                        this.minecraft.setScreen(parent);
+                    }
                 }
-        ).dimensions(centerX - 100, y, 200, 20).build());
+        ).bounds(centerX - 100, y, 200, 20).build());
 
         refreshTexts();
     }
@@ -145,27 +144,28 @@ public class AutoFishConfigScreen extends Screen {
         }
     }
 
-    private Text getHudText() {
-        return Text.literal("HUD: " + (AutoFishConfig.get().showHud ? "ON" : "OFF"));
+    private Component getHudText() {
+        return Component.literal("HUD: " + (AutoFishConfig.get().showHud ? "ON" : "OFF"));
     }
 
-    private Text getMessagesText() {
-        return Text.literal("Mensagens: " + (AutoFishConfig.get().showActionbarMessages ? "ON" : "OFF"));
+    private Component getMessagesText() {
+        return Component.literal("Mensagens: " + (AutoFishConfig.get().showActionbarMessages ? "ON" : "OFF"));
     }
 
-    private Text getMinDelayText() {
-        return Text.literal("Delay mínimo: " + AutoFishConfig.get().recastDelayMin);
+    private Component getMinDelayText() {
+        return Component.literal("Delay mínimo: " + AutoFishConfig.get().recastDelayMin);
     }
 
-    private Text getMaxDelayText() {
-        return Text.literal("Delay máximo: " + AutoFishConfig.get().recastDelayMax);
+    private Component getMaxDelayText() {
+        return Component.literal("Delay máximo: " + AutoFishConfig.get().recastDelayMax);
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         AutoFishConfig.save();
 
-        assert client != null;
-        client.setScreen(parent);
+        if (this.minecraft != null) {
+            this.minecraft.setScreen(parent);
+        }
     }
 }

@@ -1,10 +1,10 @@
 package com.amadeu.autofish;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +17,17 @@ public class InventoryTracker {
     // Salva o inventário antes da puxada.
     // Comunicação:
     // - chamado por AutoFishController.java antes de recolher
-    public static void captureBeforeReel(MinecraftClient client) {
+    public static void captureBeforeReel(Minecraft client) {
         snapshot.clear();
 
         if (client == null || client.player == null) {
             return;
         }
 
-        PlayerInventory inv = client.player.getInventory();
+        Inventory inv = client.player.getInventory();
 
-        for (int i = 0; i < inv.size(); i++) {
-            ItemStack stack = inv.getStack(i);
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 snapshot.merge(stack.getItem(), stack.getCount(), Integer::sum);
             }
@@ -41,7 +41,7 @@ public class InventoryTracker {
     // Comunicação:
     // - chamado por AutoFishController.java a cada tick
     // - atualiza StatsTracker.java
-    public static void tick(MinecraftClient client) {
+    public static void tick(Minecraft client) {
         if (pendingCheckTicks < 0) {
             return;
         }
@@ -59,12 +59,12 @@ public class InventoryTracker {
             return;
         }
 
-        PlayerInventory inv = client.player.getInventory();
+        Inventory inv = client.player.getInventory();
 
         Map<Item, Integer> current = new HashMap<>();
 
-        for (int i = 0; i < inv.size(); i++) {
-            ItemStack stack = inv.getStack(i);
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 current.merge(stack.getItem(), stack.getCount(), Integer::sum);
             }
@@ -104,11 +104,10 @@ public class InventoryTracker {
         if (AutoFishConfig.get().showActionbarMessages &&
                 client.player != null &&
                 (totalFish > 0 || totalTreasure > 0 || totalJunk > 0)) {
-            client.player.sendMessage(
-                    Text.literal("AutoFish loot -> peixe: " + totalFish +
+            client.player.sendOverlayMessage(
+                    Component.literal("AutoFish loot -> peixe: " + totalFish +
                             " raro: " + totalTreasure +
-                            " junk: " + totalJunk),
-                    true);
+                            " junk: " + totalJunk));
         }
 
         snapshot.clear();
